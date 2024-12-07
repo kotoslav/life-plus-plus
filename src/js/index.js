@@ -1,14 +1,15 @@
-import { Application } from 'pixi.js';
+import { Application, Container } from 'pixi.js';
+import Screen from './Screens/Screen';
+import StartScreen from './Screens/StartScreen';
 
-// Asynchronous IIFE
 (async () =>
 {
-    // Create a PixiJS application.
     const app = new Application();
-
-    // Intialize the application.
-    await app.init({ background: '#1099bb', resizeTo: window });
-
-    // Then adding the application's canvas to the DOM body.
+    await app.init({ background: '#bbbbbb', height: window.innerHeight, width: window.innerWidth });
     document.body.appendChild(app.canvas);
+
+
+	const root = new Screen(app);
+    root.changeScreen(StartScreen);
+	app.stage.addChild(root);
 })();
