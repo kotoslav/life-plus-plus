@@ -1,15 +1,17 @@
-import { Container, Text } from "pixi.js";
+import { Container, Graphics, Text } from "pixi.js";
 
 export default class StartScreen extends Container{
-    constructor(app) {
+    constructor(parentNode) {
         super();
-        this.x = 0;
-        this.y = 0;
         this.buttonText = new Text({text: "Начать игру"});
+        this.background = new Graphics();
+        this.addChild(this.background);
         this.addChild(this.buttonText);
-        this.buttonText.x = app.screen.width / 2;
-        this.buttonText.y = app.screen.height / 2;
-        this.pivot.x = this.width / 2;
-        this.pivot.y = this.height / 2;
+        this.background.rect(0, 0, window.innerWidth, window.innerHeight);
+        this.background.fill('#aaaaaa');
+        this.buttonText.x = this.width / 2;
+        this.buttonText.y = this.height / 2;
+        this.buttonText.pivot.x = this.buttonText.width / 2;
+        this.buttonText.pivot.y = this.buttonText.height / 2;
     }
 }

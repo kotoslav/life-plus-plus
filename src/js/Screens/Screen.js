@@ -12,8 +12,7 @@ export default class Screen extends Container{
 
     changeScreen(sceneClass){ 
         this.removeChild(this.#currentScreen);
-        this.#currentScreen = new sceneClass(this.#app);
-        console.log(this.#currentScreen);
+        this.#currentScreen = new sceneClass(this);
         this.addChild(this.#currentScreen);
     }
 
