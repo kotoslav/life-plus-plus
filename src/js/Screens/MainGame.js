@@ -6,13 +6,20 @@ import loadLevel from "../Levels/loadLevel";
 import Journal from "../Entity/Journal";
 import Phone from "../Entity/Phone";
 import Dialogue from "../Entity/Dialogue";
+import Map from '../Entity/Map';
 
 export default class MainGame extends Container{
     constructor(root) {
         super();
         this.addBackground();
         this.addTable();
-
+		
+		let Mape = new Map();
+		const car1 = Mape.makeNewCar();
+		const pacient1 = Mape.getNewPacient();
+		console.log(pacient1);
+		Mape.goToPacient(pacient1,car1);
+		this.addChild(Mape)
         //добавление окна
         const windowEntity = new WindowToStreet(); 
         this.addChild(windowEntity);
@@ -30,9 +37,18 @@ export default class MainGame extends Container{
         //выбор уровня
         this.level = loadLevel('level1'); 
         phoneEntity.setCalls(this.level.dialogs);
+		
   
     }
 
+	async makeNewCar(Mape) {
+		await Mape.makeNewCar();
+	}
+	
+	async getNewPacient(Mape) {
+		Mape.getNewPacient();
+	}
+	
     async addBackground() {
         const background = new Graphics();
         background.rect(0, 0, WIDTH, HEIGHT);
