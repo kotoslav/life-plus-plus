@@ -1,4 +1,4 @@
-import { Application, Container } from 'pixi.js';
+import { Application} from 'pixi.js';
 import Screen from './Screens/Screen';
 import StartScreen from './Screens/StartScreen';
 
@@ -7,7 +7,7 @@ import StartScreen from './Screens/StartScreen';
     const app = new Application();
 
     globalThis.__PIXI_APP__ = app;
-    
+
     await app.init({ background: '#000000', resizeTo: window });
     document.body.appendChild(app.canvas);
 

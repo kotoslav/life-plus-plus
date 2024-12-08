@@ -2,22 +2,35 @@ import { Container, Assets, Graphics } from "pixi.js";
 import { HEIGHT, WIDTH } from "../utils/consts";
 import tableSVG from "../../Assets/Sprites/Table.svg";
 import WindowToStreet from "../Entity/WindowToStreet";
+import loadLevel from "../Levels/loadLevel";
+import Journal from "../Entity/Journal";
+import Phone from "../Entity/Phone";
 
 export default class MainGame extends Container{
-    constructor() {
+    constructor(root) {
         super();
         this.addBackground();
         this.addTable();
 
-        const Window = new WindowToStreet();
-        this.addChild(Window);
+        //добавление окна
+        const windowEntity = new WindowToStreet(); 
+        this.addChild(windowEntity);
 
+        //Сущность журнала
+        const journalEntity = new Journal();
+        this.addChild(journalEntity );
+
+        const phoneEntity = new Phone();
+        this.addChild(phoneEntity);
+
+        //выбор уровня
+        this.level = loadLevel('level1', {journalEntity, phoneEntity}); 
   
     }
 
     async addBackground() {
         const background = new Graphics();
-        background.rect(0, 0, WIDTH, HEIGHT)
+        background.rect(0, 0, WIDTH, HEIGHT);
         background.fill('818F99');
         this.addChild(background);
     }

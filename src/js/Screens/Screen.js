@@ -6,7 +6,7 @@ export default class Screen extends Container{
     #app;
     constructor(app) {
         super();
-        this.#app = app;
+        this.app = app;
         this.#currentScreen = new Container();
         this.addChild(this.#currentScreen);
         this.scaleToContainer();
@@ -22,13 +22,13 @@ export default class Screen extends Container{
     }
 
     actualWidth() {
-        const { width, height } = this.#app.screen;
+        const { width, height } = this.app.screen;
         const isWidthConstrained = width < height * 16 / 9;
         return isWidthConstrained ? width : height * 16 / 9;
       }
     
     actualHeight() {
-        const { width, height } = this.#app.screen;
+        const { width, height } = this.app.screen;
         const isHeightConstrained = width * 9 / 16 > height;
         return isHeightConstrained ? height : width * 9 / 16;
       }
@@ -38,8 +38,8 @@ export default class Screen extends Container{
         this.height = HEIGHT;
         this.scale.x = this.actualWidth() / WIDTH;
         this.scale.y = this.actualHeight() / HEIGHT;
-        this.x = this.#app.screen.width / 2 - this.actualWidth() / 2;
-        this.y = this.#app.screen.height / 2 - this.actualHeight() / 2;
+        this.x = this.app.screen.width / 2 - this.actualWidth() / 2;
+        this.y = this.app.screen.height / 2 - this.actualHeight() / 2;
     }
 
 }
