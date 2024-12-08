@@ -29,9 +29,14 @@ export default class MainGame extends Container{
                 parseAsGraphicsContext: true,
             },
         });
+        
 
         const graphics = new Graphics(tableSvg);
         graphics.position.set(0, HEIGHT - graphics.height);
-        this.addChild(graphics);
+
+        const mask = new Graphics();
+        mask.rect(0, HEIGHT - graphics.height, WIDTH, graphics.height).fill(0xffffff);
+        this.addChild(graphics, mask);
+        graphics.setMask({mask: mask});
     }
 }

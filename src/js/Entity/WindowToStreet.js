@@ -18,6 +18,7 @@ export default class WindowToStreet extends Container {
 
         const graphics = new Graphics(windowSvg);
         graphics.position.set(0, 0);
+        
         const mask = new Graphics();
         mask.rect(0, 0, 609, 526).fill(0xffffff);
 
