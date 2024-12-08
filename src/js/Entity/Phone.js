@@ -1,9 +1,11 @@
-import { Container, Assets, Graphics, Ticker } from "pixi.js";
-import SVG from "../../Assets/Sprites/Phone.svg";
+import { Container, Assets, Graphics, Ticker, Sprite } from "pixi.js";
+import SVG from "../../Assets/Sprites/Phone.png";
 
 export default class Phone extends Container{
-    constructor() {
+    constructor(root) {
         super();
+
+        this.root = root;
         this.zIndex = 1;
         this.eventMode = 'static';
         this.cursor = 'pointer';
@@ -19,34 +21,39 @@ export default class Phone extends Container{
         this.pivot.y = 274 / 2;
 
         this.ticker = new Ticker();
-        this.callTicker = new Ticker();
-        this.ringAnimation();
+        this.ringAnimationInit();
         this.on('pointerdown', this.pickUpPhone.bind(this));
 
         this.numOfCalls = 0;
+        this.calls = [];
         this.currentCallId = 0;
-
-        this.waitNextCall(this.currentCall);
     }
 
     async drawSVG() {
-        const PhoneSVG = await Assets.load({
-            src: SVG,
-            data: {
-                parseAsGraphicsContext: true,
-            },
-        });
+        const PhoneSVG = await Assets.load(SVG);
         
 
-        const graphics = new Graphics(PhoneSVG);
+        const graphics = new Sprite(PhoneSVG);
         graphics.position.set(0, 0);
         this.addChild(graphics);
     }
 
+    setCalls(calls) {
+        if (calls.length > 0) {
+            this.numOfCalls = calls.length;
+        }
+        this.calls = calls;
+        this.waitNextCall(this.currentCall);
+    }
+
     incomingCall() {
-        this.currentCall = {};
+        this.currentCall = this.calls[this.currentCallId];
         this.incomingCallState = true;
         this.ringAnimationStart();
+        // const avatar = this.calls[this.currentCallId].avatar;
+        // avatar.x = 0;
+        // avatar.y = 0;
+        // this.addChild(avatar);
         //animation and sound
     }
 
@@ -54,8 +61,10 @@ export default class Phone extends Container{
         if (this.incomingCallState) {
             this.incomingCallState = false;
             this.stopRingAnimation();
-            this.currentCall = null;
-            this.callTicker.start();
+            this.root.startDialogue(this.currentCall);
+
+            //this.currentCall = null;
+            //this.waitNextCall();
         } 
     }
 
@@ -67,7 +76,7 @@ export default class Phone extends Container{
         }
     }
 
-    ringAnimation() {
+    ringAnimationInit() {
         this.rotation = 0;
         let rot = 1;
         this.ticker.add((t) => {
@@ -88,18 +97,16 @@ export default class Phone extends Container{
         this.rotation = 0;
     }
 
+    callInterval() {
+        this.incomingCall();
+        this.currentCallId++;
+    };
+
+
     waitNextCall() {
-        this.timeToNextCall = Math.random() * 5000 + 2000;
-        this.callTicker.start();
-        this.callTicker.add((time) => {
-            if ((time.lastTime > this.timeToNextCall) && (this.currentCall == null) && (this.currentCallId <= this.numOfCalls -1)) {
-                time.stop();
-                this.incomingCall();
-                console.log("Вызов - ", this.currentCallId)
-                this.currentCallId++;
-                this.timeToNextCall = Math.random() * 5000 + time.lastTime + 2000;
-            }
-        });
+        if (this.currentCallId <= this.numOfCalls -1) {
+            setTimeout(this.callInterval.bind(this), 2000);
+        }
     }
 
     

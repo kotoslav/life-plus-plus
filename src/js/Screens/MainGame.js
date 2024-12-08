@@ -5,6 +5,7 @@ import WindowToStreet from "../Entity/WindowToStreet";
 import loadLevel from "../Levels/loadLevel";
 import Journal from "../Entity/Journal";
 import Phone from "../Entity/Phone";
+import Dialogue from "../Entity/Dialogue";
 
 export default class MainGame extends Container{
     constructor(root) {
@@ -20,11 +21,15 @@ export default class MainGame extends Container{
         const journalEntity = new Journal();
         this.addChild(journalEntity );
 
-        const phoneEntity = new Phone();
+        const phoneEntity = new Phone(this);
         this.addChild(phoneEntity);
 
+        this.dialogueWindow = new Dialogue();
+        this.addChild(this.dialogueWindow)
+
         //выбор уровня
-        this.level = loadLevel('level1', {journalEntity, phoneEntity}); 
+        this.level = loadLevel('level1'); 
+        phoneEntity.setCalls(this.level.dialogs);
   
     }
 
@@ -51,5 +56,9 @@ export default class MainGame extends Container{
         mask.rect(0, HEIGHT - graphics.height, WIDTH, graphics.height).fill(0xffffff);
         this.addChild(graphics, mask);
         graphics.setMask({mask: mask});
+    }
+
+    startDialogue(dialogue) {
+        this.dialogueWindow.dialogueStart(dialogue);
     }
 }
