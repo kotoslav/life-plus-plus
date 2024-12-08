@@ -5,13 +5,17 @@ import StartScreen from './Screens/StartScreen';
 (async () =>
 {
     const app = new Application();
-    await app.init({ background: '#bbbbbb', height: window.innerHeight, width: window.innerWidth, autoResize: true });
+
+    globalThis.__PIXI_APP__ = app;
+    
+    await app.init({ background: '#000000', resizeTo: window });
     document.body.appendChild(app.canvas);
-
-
 
 	const root = new Screen(app);
     root.changeScreen(StartScreen);
 	app.stage.addChild(root);
 
+    window.addEventListener('resize', root.scaleToContainer.bind(root));
+    
+    
 })();
