@@ -38,7 +38,7 @@ export default class Map extends Container{
 		while (true){
 			const min = 0;
 			const max = 17;
-			randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+			randomNum = Math.floor(Math.random() * (max - min)) + min;
 			if(!this.#pasients.includes(randomNum))
 			{
 				this.#pasients.push(randomNum);
@@ -108,7 +108,7 @@ function findShortestPath(screenMas, start, end) {
 
 let masPacientXY = [];
 
-for(let i = 0; i<18; i++)
+for(let i = 0; i<17; i++)
 {
 	masPacientXY[i] = [];
 }
