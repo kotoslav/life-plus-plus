@@ -1,6 +1,7 @@
-import { Application} from 'pixi.js';
+import { Application, Assets } from 'pixi.js';
 import Screen from './Screens/Screen';
 import StartScreen from './Screens/StartScreen';
+import stamFont from '../Fonts/StampatelloFaceto.otf';
 
 (async () =>
 {
@@ -16,6 +17,8 @@ import StartScreen from './Screens/StartScreen';
 	app.stage.addChild(root);
 
     window.addEventListener('resize', root.scaleToContainer.bind(root));
-    
+
+    Assets.addBundle('fonts', [{alias: "StampatelloFaceto", src:stamFont}]);
+    await Assets.loadBundle('fonts');
     
 })();

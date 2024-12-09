@@ -1,5 +1,6 @@
-import { Container, Graphics, Sprite, Assets } from "pixi.js";
-import { HEIGHT, WIDTH } from "../utils/consts";
+import { Container, Graphics, Sprite, Assets, Text } from "pixi.js";
+import { DIALOGUE_BUTTON_HEIGHT, DIALOGUE_BUTTON_WIDTH, HEIGHT, WIDTH } from "../utils/consts";
+import { FancyButton } from "@pixi/ui";
 
 export default class Dialogue extends Container {
     constructor() {
@@ -23,6 +24,11 @@ export default class Dialogue extends Container {
         this.drawDialogueContainer();
     }
 
+    dialogueEnd() {
+        this.dialogue = null;
+        this.removeChildren();
+    }
+
     drawShadow() {
         const graphics = new Graphics();
         graphics.rect(0, 0, WIDTH, HEIGHT);
@@ -42,8 +48,27 @@ export default class Dialogue extends Container {
         this.chatContainer.addChild(avatar);
         avatar.position.set(0, 160);
 
+        const declineButton = new FancyButton({
+            defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECEAEC"),
+            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("FFEAEC"),
+            text: new Text({text: this.dialogue.decline, style: {
+                fill: "000000", 
+                fontSize: 32, 
+                fontFamily: "StampatelloFaceto",
+                wordWrap: true, 
+                wordWrapWidth: 625}}),
+        });
+        
+        
 
+        const buttonSpace = new Container();
+        buttonSpace.x = 500;
+        buttonSpace.y = 128;
+        this.chatContainer.addChild(buttonSpace);
 
+        buttonSpace.addChild(declineButton);
+
+        declineButton.onPress.connect(() => { this.dialogueEnd() })
         
     }
 

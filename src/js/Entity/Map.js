@@ -10,6 +10,8 @@ export default class Map extends Container{
 	{
         super();		
 		this.addFullMap();
+		this.scale = 0.85;
+		this.x = 140;
 		
 	}
 	async addFullMap()
@@ -19,7 +21,6 @@ export default class Map extends Container{
         const mapSpriteMap = new Sprite(mapPng);
         mapSpriteMap.position.set(696, 5);
         this.addChild(mapSpriteMap);
-		
 	}
 	makeNewCar()
 	{
