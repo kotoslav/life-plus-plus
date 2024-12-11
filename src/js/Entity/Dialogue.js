@@ -70,19 +70,20 @@ export default class Dialogue extends Container {
         let currYButtonCoord = 0;
 
         this.dialogue.conversation.forEach((val, key) => {
+            const text = new Text({text: key, style: {
+                fill: "000000", 
+                fontSize: 32, 
+                fontFamily: "StampatelloFaceto",
+                wordWrap: true, 
+                wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
             const dialogueButton = new FancyButton({
-                defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECEAEC"),
-                hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECEAFF"),
-                text: new Text({text: key, style: {
-                    fill: "000000", 
-                    fontSize: 32, 
-                    fontFamily: "StampatelloFaceto",
-                    wordWrap: true, 
-                    wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}}),
+                defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, text.height + 20, 60).fill("ECEAEC"),
+                hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, text.height + 20, 60).fill("ECEAFF"),
+                text 
             });
             buttonSpace.addChild(dialogueButton);
             dialogueButton.y = currYButtonCoord;
-            currYButtonCoord += 50 + DIALOGUE_BUTTON_HEIGHT;
+            currYButtonCoord += 20 + text.height + 20;
 
             dialogueButton.onPress.connect(() => { 
                 this.message = this.dialogue.conversation.get(dialogueButton.text);
@@ -91,33 +92,36 @@ export default class Dialogue extends Container {
             })
         });
 
+        const declineText = new Text({text: this.dialogue.decline, style: {
+            fill: "000000", 
+            fontSize: 32, 
+            fontFamily: "StampatelloFaceto",
+            wordWrap: true, 
+            wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
         const declineButton = new FancyButton({
-            defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECEAEC"),
-            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("FFEAEC"),
-            text: new Text({text: this.dialogue.decline, style: {
-                fill: "000000", 
-                fontSize: 32, 
-                fontFamily: "StampatelloFaceto",
-                wordWrap: true, 
-                wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}}),
+            defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("ECEAEC"),
+            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("FFEAEC"),
+            text: declineText,
         });
         buttonSpace.addChild(declineButton);
         declineButton.y = currYButtonCoord;
-        currYButtonCoord += 50 + DIALOGUE_BUTTON_HEIGHT;
+        currYButtonCoord += 20 + declineText.height + 20;
+
+        const acceptText = new Text({text: this.dialogue.accept, style: {
+            fill: "000000", 
+            fontSize: 32, 
+            fontFamily: "StampatelloFaceto",
+            wordWrap: true, 
+            wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
 
         const acceptButton = new FancyButton({
-            defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECEAEC"),
-            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, DIALOGUE_BUTTON_HEIGHT, 60).fill("ECFFEC"),
-            text: new Text({text: this.dialogue.accept, style: {
-                fill: "000000", 
-                fontSize: 32, 
-                fontFamily: "StampatelloFaceto",
-                wordWrap: true, 
-                wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}}),
+            defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, acceptText.height + 20, 60).fill("ECEAEC"),
+            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, acceptText.height + 20, 60).fill("ECFFEC"),
+            text: acceptText,
         });
         buttonSpace.addChild(acceptButton);
         acceptButton.y = currYButtonCoord;
-        currYButtonCoord += 50 + DIALOGUE_BUTTON_HEIGHT;
+        currYButtonCoord += 20 + acceptText.height + 20;
         
 
         declineButton.onPress.connect(() => { this.dialogueEnd() })
