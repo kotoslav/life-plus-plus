@@ -11,19 +11,24 @@ export default class Dialogue extends Container {
         this.visible = false;
 
         this.message = '';
-        this.chatContainer = new Container();
-        this.chatContainer.x = 358;
-        this.chatContainer.y = 35;
-        this.chatContainer.zIndex = 3;
-        this.addChild(this.chatContainer);
+
 
         this.messageContainer = new Container();
         this.messageContainer.x = 668;
         this.messageContainer.y = 35;
-        this.messageContainer.scale.x = 1.15;
         this.messageContainer.zIndex = 3;
-        this.drawMessageSVG(this.messageContainer);
+
+        this.drawMessageSVG(0);
         this.addChild(this.messageContainer);
+
+        this.chatContainer = new Container();
+        this.chatContainer.x = 358;
+        this.chatContainer.y = 0;
+
+        console.log(this.messageContainer.y)
+
+        this.chatContainer.zIndex = 3;
+        this.addChild(this.chatContainer);
 
 
         //this.drawShadow();
@@ -31,7 +36,8 @@ export default class Dialogue extends Container {
     }
 
 
-    async drawMessageSVG(cont) {
+    async drawMessageSVG(height) {
+        /*
         const messageSVG = await Assets.load({
             src: messageBoxSVG,
             data: {
@@ -39,10 +45,15 @@ export default class Dialogue extends Container {
             },
         });
         
+        
 
         const graphics = new Graphics(messageSVG);
+        */
+
+        const graphics = new Graphics();
+        graphics.roundRect(0, 0, 1220, height + 60, 60).fill("ECEAEC"),
         graphics.position.set(0, 0);
-        cont.addChild(graphics);
+        this.messageContainer.addChild(graphics);
     }
 
     dialogueStart(dialogue) {
@@ -78,7 +89,7 @@ export default class Dialogue extends Container {
                 wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
             const dialogueButton = new FancyButton({
                 defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, text.height + 20, 60).fill("ECEAEC"),
-                hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, text.height + 20, 60).fill("ECEAFF"),
+                hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, text.height + 20, 60).fill("ECEAFF").stroke({ width: 1, color: "DCDAEF" }),
                 text 
             });
             buttonSpace.addChild(dialogueButton);
@@ -100,7 +111,7 @@ export default class Dialogue extends Container {
             wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
         const declineButton = new FancyButton({
             defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("ECEAEC"),
-            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("FFEAEC"),
+            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("FFEAEC").stroke({ width: 1, color: "EFDADC" }),
             text: declineText,
         });
         buttonSpace.addChild(declineButton);
@@ -116,7 +127,7 @@ export default class Dialogue extends Container {
 
         const acceptButton = new FancyButton({
             defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, acceptText.height + 20, 60).fill("ECEAEC"),
-            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, acceptText.height + 20, 60).fill("ECFFEC"),
+            hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, acceptText.height + 20, 60).fill("ECFFEC").stroke({ width: 1, color: "DCEFDC" }),
             text: acceptText,
         });
         buttonSpace.addChild(acceptButton);
@@ -129,7 +140,6 @@ export default class Dialogue extends Container {
 
     async drawMessage(){
         this.messageContainer.removeChildren();
-        this.drawMessageSVG(this.messageContainer);
 
         const text = new Text({
             text: this.message, style: {
@@ -137,12 +147,14 @@ export default class Dialogue extends Container {
             fontSize: 32, 
             fontFamily: "StampatelloFaceto",
             wordWrap: true, 
-            wordWrapWidth: 850}
+            wordWrapWidth: 1095}
         })
         text.x = 60;
         text.y = 30;
         text.zIndex = 1;
-
+        this.messageContainer.height = text.height;
+        this.chatContainer.y = text.height - 90;
+        this.drawMessageSVG(text.height);
         this.messageContainer.addChild(text);
     
 
