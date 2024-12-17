@@ -17,7 +17,6 @@ export default class MainGame extends Container{
 		let Mape = new Map();
 		const car1 = Mape.makeNewCar();
 		const pacient1 = Mape.getNewPacient();
-		console.log(pacient1);
 		Mape.goToPacient(pacient1,car1);
 		this.addChild(Mape)
         //добавление окна
@@ -25,19 +24,20 @@ export default class MainGame extends Container{
         this.addChild(windowEntity);
 
         //Сущность журнала
-        const journalEntity = new Journal();
-        this.addChild(journalEntity );
+        this.journalEntity = new Journal(this);
+        this.addChild(this.journalEntity);
 
-        const phoneEntity = new Phone(this);
-        this.addChild(phoneEntity);
+        this.phoneEntity = new Phone(this);
+        this.addChild(this.phoneEntity);
 
-        this.dialogueWindow = new Dialogue();
+        this.dialogueWindow = new Dialogue(this);
         this.addChild(this.dialogueWindow)
 
         //выбор уровня
         this.level = loadLevel('level1'); 
-        phoneEntity.setCalls(this.level.dialogs);
+        this.phoneEntity.setCalls(this.level.dialogs);
 		
+        this.waitNextCall();
   
     }
 
@@ -77,4 +77,14 @@ export default class MainGame extends Container{
     startDialogue(dialogue) {
         this.dialogueWindow.dialogueStart(dialogue);
     }
+
+    waitNextCall() {
+        this.phoneEntity.waitNextCall();
+    }
+
+    addTaskToJournal(task) {
+        this.journalEntity.addTask(task);
+    }
+
+
 }

@@ -39,11 +39,8 @@ export default class Phone extends Container{
     }
 
     setCalls(calls) {
-        if (calls.length > 0) {
-            this.numOfCalls = calls.length;
-        }
+        this.numOfCalls = calls.length;
         this.calls = calls;
-        this.waitNextCall(this.currentCall);
     }
 
     incomingCall() {
@@ -62,6 +59,7 @@ export default class Phone extends Container{
             this.incomingCallState = false;
             this.stopRingAnimation();
             this.root.startDialogue(this.currentCall);
+            console.log(this.currentCall);
 
             //this.currentCall = null;
             //this.waitNextCall();
@@ -77,13 +75,8 @@ export default class Phone extends Container{
     }
 
     ringAnimationInit() {
-        this.rotation = 0;
-        let rot = 1;
         this.ticker.add((t) => {
-            if (this.rotation < 0.5 && rot == 1) { this.rotation += 0.1 * t.deltaTime}
-            else if (this.rotation > 0.5 && rot == 1) { this.rotation -= 0.1 * t.deltaTime; rot = 0}
-            else if (this.rotation > -0.5 && rot == 0) { this.rotation -= 0.1 * t.deltaTime}
-            else {this.rotation += 0.1; rot = 1}
+            this.rotation = Math.sin(t.lastTime * 0.02) * 0.5;
         })
     }
 
@@ -98,15 +91,13 @@ export default class Phone extends Container{
     }
 
     callInterval() {
+        this.currentCallId = Math.floor(Math.random() * (this.numOfCalls));
         this.incomingCall();
-        this.currentCallId++;
     };
 
 
     waitNextCall() {
-        if (this.currentCallId <= this.numOfCalls -1) {
-            setTimeout(this.callInterval.bind(this), 2000);
-        }
+        setTimeout(this.callInterval.bind(this), 5000);
     }
 
     

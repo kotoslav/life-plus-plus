@@ -1,11 +1,11 @@
-import { Container, Graphics, Sprite, Assets, Text, buildRectangle } from "pixi.js";
-import { DIALOGUE_BUTTON_HEIGHT, DIALOGUE_BUTTON_WIDTH, HEIGHT, WIDTH } from "../utils/consts";
+import { Container, Graphics, Sprite, Assets, Text } from "pixi.js";
+import { DIALOGUE_BUTTON_WIDTH, HEIGHT, WIDTH } from "../utils/consts";
 import { FancyButton } from "@pixi/ui";
-import messageBoxSVG from "../../Assets/Sprites/MessageBox.svg"
 
 export default class Dialogue extends Container {
-    constructor() {
+    constructor(root) {
         super();
+        this.root = root;
         this.dialogue = null;
         this.zIndex = 2;
         this.visible = false;
@@ -18,38 +18,18 @@ export default class Dialogue extends Container {
         this.messageContainer.y = 35;
         this.messageContainer.zIndex = 3;
 
-        this.drawMessageSVG(0);
         this.addChild(this.messageContainer);
 
         this.chatContainer = new Container();
         this.chatContainer.x = 358;
         this.chatContainer.y = 0;
 
-        console.log(this.messageContainer.y)
-
         this.chatContainer.zIndex = 3;
         this.addChild(this.chatContainer);
-
-
-        //this.drawShadow();
-        //setInterval(this.removeChildren.bind(this), 3000);
     }
 
 
     async drawMessageSVG(height) {
-        /*
-        const messageSVG = await Assets.load({
-            src: messageBoxSVG,
-            data: {
-                parseAsGraphicsContext: true,
-            },
-        });
-        
-        
-
-        const graphics = new Graphics(messageSVG);
-        */
-
         const graphics = new Graphics();
         graphics.roundRect(0, 0, 1220, height + 60, 60).fill("ECEAEC"),
         graphics.position.set(0, 0);
@@ -65,7 +45,10 @@ export default class Dialogue extends Container {
 
     dialogueEnd() {
         this.dialogue = null;
-        this.removeChildren();
+        this.chatContainer.removeChildren();
+        this.messageContainer.removeChildren();
+        this.visible = false;
+        this.root.waitNextCall();
     }
 
     drawShadow() {
@@ -109,6 +92,7 @@ export default class Dialogue extends Container {
             fontFamily: "StampatelloFaceto",
             wordWrap: true, 
             wordWrapWidth: DIALOGUE_BUTTON_WIDTH - 120}});
+
         const declineButton = new FancyButton({
             defaultView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("ECEAEC"),
             hoverView: new Graphics().roundRect(0, 0, DIALOGUE_BUTTON_WIDTH, declineText.height + 20, 60).fill("FFEAEC").stroke({ width: 1, color: "EFDADC" }),
@@ -135,7 +119,15 @@ export default class Dialogue extends Container {
         currYButtonCoord += 20 + acceptText.height + 20;
         
 
-        declineButton.onPress.connect(() => { this.dialogueEnd() })
+        declineButton.onPress.connect(() => { this.dialogueEnd() });
+        acceptButton.onPress.connect(() => { 
+            const task = {
+                greet: this.dialogue.greet,
+                timeToSave: Date.now() + this.dialogue.timeToSave
+            };
+            this.root.addTaskToJournal(task);
+            this.dialogueEnd() 
+        })
     }
 
     async drawMessage(){
@@ -173,8 +165,6 @@ export default class Dialogue extends Container {
         this.chatContainer.addChild(buttonSpace);
 
         this.drawButtonsAndMessage(buttonSpace);
-
-        
     }
 
 
